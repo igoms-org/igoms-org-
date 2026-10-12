@@ -4,3 +4,5 @@
 - Roles live in `user_roles` (never on profiles) and are assigned only from the database, preventing self-promotion.
 - Public verification reads one certificate by its unguessable public_id via RPC; no listing is exposed.
 - Use A4 portrait print rules that hide app UI (`.no-print`) and preserve certificate colors.
+
+-
