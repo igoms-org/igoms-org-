@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
-import { familyFormSchema, type FamilyForm } from "./family";
+import { familyFormSchema } from "./family";
 
 function publicClient() {
   const url = process.env["SUPABASE_URL"];
@@ -24,7 +24,9 @@ export const verifyCertificate = createServerFn({ method: "GET" })
     if (error) throw new Error("Could not load certificate");
     const row = rows?.[0];
     if (!row) return null;
-    return { publicId: row.public_id, certificateNo: row.certificate_no, form: row.data as unknown as FamilyForm, createdAt: row.created_at };
+    const form = familyFormSchema.safeParse(row.data);
+    if (!form.success) return null;
+    return { publicId: row.public_id, certificateNo: row.certificate_no, form: form.data, createdAt: row.created_at };
   });
 
 export const getMe = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {

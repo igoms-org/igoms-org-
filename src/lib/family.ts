@@ -4,7 +4,12 @@ import type { Certificate } from "./certificate";
 export const RELATIONS = ["নিজ", "পুত্র", "কন্যা", "স্ত্রী", "স্বামী", "পিতা", "মাতা", "ভাই", "বোন"] as const;
 const req = z.string().trim().min(1).max(200);
 const opt = z.string().trim().max(100);
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(value => {
+  const [year = 0, month = 0, day = 0] = value.split("-").map(Number);
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  return year >= 1 && month >= 1 && month <= 12 && day >= 1 && day <= (days[month - 1] ?? 0);
+}, "সঠিক তারিখ দিন");
 
 export const memberInputSchema = z.object({ name: req, reg: opt, dob: isoDate, relation: z.enum(RELATIONS) });
 export const familyFormSchema = z.object({
@@ -34,7 +39,13 @@ export function ageOn(dob: string, issueDate: string): number {
 export const toDisplayDate = (iso: string) => { const [y, m, d] = iso.split("-"); return y && m && d ? `${d}-${m}-${y}` : ""; };
 export const padCertificateNo = (n: number) => String(n).padStart(8, "0");
 export const canAfford = (balance: number, cost: number) => balance >= cost;
-export const todayIso = () => new Date().toISOString().slice(0, 10);
+export const todayIso = () => {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Dhaka", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(new Date());
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find(p => p.type === type)?.value;
+  return `${part("year")}-${part("month")}-${part("day")}`;
+};
 
 /** Maps saved form data onto the printable certificate document. */
 export function toDocument(f: FamilyForm, certificateNo: string): Certificate {

@@ -28,6 +28,8 @@ Run the checks with `npm test`, `npm run lint`, and `npm run build`.
 3. Create the administrator accounts in Supabase Authentication. The app does not provide public sign-up.
 4. Add the project URL and publishable key to `.env` for local development and to the Vercel environment as described below.
 
+For an existing database, apply `drizzle/migrations/0003_validate_certificate_data.sql` in the Supabase SQL Editor to enable certificate validation for direct RPC calls. This migration rejects malformed data before charging tokens. Public verification remains available without login through each certificate's verification link or QR code.
+
 ## Vercel deployment
 
 1. Import this project into Vercel and leave the build command as `npm run build`.

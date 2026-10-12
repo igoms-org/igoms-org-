@@ -33,7 +33,7 @@ export function CertificateDocument({ data, verificationUrl }: { data: Certifica
                 {Array.from({ length: Math.max(0, 15 - data.members.length) }, (_, index) => <tr key={`blank-${index}`} aria-hidden="true"><td /><td /><td /><td /><td /></tr>)}
               </tbody>
             </table>
-            <p className="certificate-summary">উল্লিখিত ব্যক্তির <strong>{counts.sons} জন পুত্র,{counts.daughters} জন কন্যা,{counts.spouse} জন স্বামী/স্ত্রী, {counts.father} জন পিতা,{counts.mother} জন মাতা,{counts.brothers} জন ভাই,{counts.sisters} জন বোন, {counts.self} নিজসহ মোট-{counts.total}</strong> (<strong>{bengaliCount(counts.total)}</strong>) জন সদস্য আছে, ইহা ব্যতিত তাহার আর কোন পারিবারিক সদস্য নাই, {data.ward} নং ওয়ার্ড ইউপি সদস্য/সদস্যা এর সুপারিশের ভিত্তিতে প্রদান করা হইল।</p>
+            <p className="certificate-summary">উল্লিখিত ব্যক্তির <strong>{counts.sons} জন পুত্র,{counts.daughters} জন কন্যা,{counts.spouse} জন স্বামী/স্ত্রী, {counts.father} জন পিতা,{counts.mother} জন মাতা,{counts.brothers} জন ভাই,{counts.sisters} জন বোন, {counts.self} নিজসহ মোট-{counts.total}</strong> (<strong>{bengaliCount(counts.total)}</strong>) জন সদস্য আছে, ইহা ব্যতিত তাহার আর কোন পারিবারিক সদস্য নাই, {data.wardMember || "-"} নং ওয়ার্ড ইউপি সদস্য/সদস্যা এর সুপারিশের ভিত্তিতে প্রদান করা হইল।</p>
             <footer className="certificate-signature"><strong>{data.signer}</strong><br />{data.designation}<br />{data.union} ইউনিয়ন পরিষদ<br />{data.upazila}, {data.district}।</footer>
           </div>
         </article>

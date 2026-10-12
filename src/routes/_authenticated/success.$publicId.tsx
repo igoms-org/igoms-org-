@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useState } from "react";
+import { useVerificationUrl } from "@/hooks/use-verification-url";
 import { CertificateDocument } from "@/components/certificate-document";
 import { verifyCertificate } from "@/lib/certificates.functions";
 import { toDocument } from "@/lib/family";
@@ -15,8 +15,7 @@ function SuccessPage() {
   const { publicId } = Route.useParams();
   const get = useServerFn(verifyCertificate);
   const cert = useQuery({ queryKey: ["verify", publicId], queryFn: () => get({ data: { publicId } }) });
-  const [link, setLink] = useState("");
-  useEffect(() => setLink(`${window.location.origin}/verify/${publicId}`), [publicId]);
+  const link = useVerificationUrl(publicId);
   return (
     <div className="certificate-page">
       <div className="certificate-actions">
@@ -27,7 +26,7 @@ function SuccessPage() {
       </div>
       <div className="certificate-scroll">
         {cert.data ? (
-          <CertificateDocument data={toDocument(cert.data.form, cert.data.certificateNo)} verificationUrl={link || publicId} />
+          <CertificateDocument data={toDocument(cert.data.form, cert.data.certificateNo)} verificationUrl={link} />
         ) : (
           <p className="certificate-status">{cert.isError ? "সনদ লোড করা যায়নি" : "লোড হচ্ছে…"}</p>
         )}
