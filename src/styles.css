@@ -72,18 +72,18 @@
 :root {
   --certificate-paper: oklch(1 0 0);
   --certificate-ink: oklch(0 0 0);
-  --certificate-desk: oklch(0.845 0 0);
-  --certificate-red: oklch(0.428 0.176 29.234);
-  --certificate-red-deep: oklch(0.337 0.138 29.234);
-  --certificate-red-border: oklch(0.319 0.131 29.234);
-  --certificate-title-ink: oklch(0.988 0.063 107.07);
-  --certificate-rule: oklch(0.862 0.094 69.64);
-  --certificate-border-yellow: oklch(0.969 0.205 109.35);
-  --certificate-border-blue: oklch(0.567 0.239 278.12);
-  --certificate-button: oklch(0.97 0 0);
-  --certificate-button-end: oklch(0.958 0 0);
-  --certificate-button-ink: oklch(0.387 0 0);
-  --certificate-button-border: oklch(0.895 0 0);
+  --certificate-desk: oklch(0.84522225 0.00000000 0.000000);
+  --certificate-red: oklch(0.42886425 0.17598569 29.233885);
+  --certificate-red-deep: oklch(0.33362126 0.13690245 29.233885);
+  --certificate-red-border: oklch(0.31600556 0.12967380 29.233885);
+  --certificate-title-ink: oklch(0.98751297 0.06540892 107.539880);
+  --certificate-rule: oklch(0.87824861 0.08767438 66.269866);
+  --certificate-border-yellow: oklch(0.96850611 0.20588490 109.697977);
+  --certificate-border-blue: oklch(0.56012701 0.24414949 275.119191);
+  --certificate-button: oklch(0.97015077 0.00000000 0.000000);
+  --certificate-button-end: oklch(0.95814688 0.00000000 0.000000);
+  --certificate-button-ink: oklch(0.38665433 0.00000000 0.000000);
+  --certificate-button-border: oklch(0.89449041 0.00000000 0.000000);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
@@ -167,54 +167,53 @@
 }
 
 /* Faithful document styling is intentionally separate from app controls. */
-.certificate-page { min-height: 100vh; background: var(--certificate-desk); font-family: "SolaimanLipi", "Noto Sans Bengali", sans-serif; color: var(--certificate-ink); padding: 0 0 32px; letter-spacing: 0; line-height: normal; zoom: 95%; }
+/* The reference screenshot is 25% larger; print resets this screen scale below. */
+.certificate-page { min-height: 100vh; background: var(--certificate-desk); font-family: "SolaimanLipi", "Noto Sans Bengali", sans-serif; color: var(--certificate-ink); padding: 0 0 32px; letter-spacing: 0; line-height: normal; zoom: 118.75%; }
 .cer-container table { font-size: 16px; }
 .certificate-actions { position: fixed; z-index: 2; right: 0; top: 50%; width: 128px; margin-top: -40px; display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
-.certificate-actions button, .certificate-actions a { background: linear-gradient(var(--certificate-button), var(--certificate-button-end)); color: var(--certificate-button-ink); border: 1px solid var(--certificate-button-border); border-radius: 2px; height: 27px; padding: 0 8px; font-weight: 500; box-shadow: none; font-family: inherit; line-height: 27px; }
+.certificate-actions button { background: linear-gradient(var(--certificate-button), var(--certificate-button-end)); color: var(--certificate-button-ink); border: 1px solid var(--certificate-button-border); border-radius: 2px; height: 27px; padding: 0 8px; font-weight: 500; box-shadow: none; font-family: inherit; line-height: 27px; width: 100px; text-align: center; cursor: pointer; text-decoration: none; }
 .dashboard-action { font-size: 18px; width: 100px; }
-.certificate-actions .print-action { font-size: 10px; width: 100px; white-space: normal; display: block; overflow: visible; }
+.certificate-actions .print-action { font-size: 10px; width: 100px; white-space: normal; overflow: visible; }
 .certificate-scroll { overflow-x: auto; padding: 0 28px 28px; }
-.cer-container { position: relative; box-sizing: content-box; width: 630px; height: 988px; padding: 5px; margin: 1.1rem auto; background: var(--certificate-paper); border: 1.4rem solid; border-image: radial-gradient(var(--certificate-border-yellow), var(--certificate-border-blue)) 20; border-image-outset: 1.2; font-size: 15px; text-align: justify; }
+.cer-container { position: relative; box-sizing: content-box; width: 630px; height: 988px; padding: 5px; margin: 1.1rem auto; background: url("/images/certificate-watermark.png") center / 330px 330px no-repeat var(--certificate-paper); border: 1.4rem solid; border-image: radial-gradient(var(--certificate-border-yellow), var(--certificate-border-blue)) 20; border-image-outset: 1.2; font-size: 15px; text-align: justify; font-family: "SolaimanLipi", "Noto Sans Bengali", sans-serif; color: var(--certificate-ink); line-height: normal; letter-spacing: 0; }
 .certificate-content { position: relative; margin-top: -25px; }
 .certificate-header { width: 100%; border-collapse: separate; border-spacing: 2px; }
 .certificate-header td { height: 90px; vertical-align: middle; padding: 1px; }
-.qr-cell { width: 18.25%; }
+.qr-cell { width: 20%; }
 .qrframe { text-align: left; }
-.qrframe img { width: 100px; height: 100px; display: inline; }
-.heading-cell { width: 54.93%; text-align: center; white-space: nowrap; }
+.qrframe svg { width: 100px; height: 100px; max-width: none; display: inline; vertical-align: baseline; }
+.heading-cell { width: 60%; text-align: center; white-space: nowrap; }
 .government-heading { font-size: 14px; }
 .head-line-1 { color: var(--certificate-red); font-size: 30px; font-weight: 700; margin-top: 10px; }
 .head-line-2 { font-size: 18px; }
 .certificate-website { font-size: 16px; }
-.portrait-cell { text-align: right; width: 26.82%; }
-.portrait-cell img { width: 90px; height: 90px; max-width: none; display: inline; }
+.portrait-spacer { width: 20%; }
+.portrait-cell { text-align: right; width: 10%; }
+.portrait-cell img { width: 90px; height: 90px; max-width: none; display: inline; vertical-align: baseline; }
 .certificate-meta { width: 100%; border-collapse: collapse; }
 .certificate-meta td { height: 63px; white-space: nowrap; }
 .certificate-number { width: 30%; text-align: left; font-size: 15px; }
-.certificate-number div { display: inline; margin-left: 36px; }
+.certificate-number div { float: right; margin-right: 20px; font-family: Georgia, serif; font-weight: bold; }
 .certificate-number strong { font-size: 17px; }
+.certificate-title-cell { width: 50%; text-align: center; }
 .certificate-title { box-sizing: content-box; width: 240px; padding: 3px; border: 3px solid var(--certificate-red-border); border-radius: 5px; margin: 10px auto; text-align: center; font-size: 22px; font-weight: bold; color: var(--certificate-title-ink); background: linear-gradient(var(--certificate-red), var(--certificate-red-deep)); }
 .certificate-date { width: 20%; text-align: right; font-size: 18px; }
 .certificate-divider { height: 1px; border: 0; border-top: 2px dashed var(--certificate-rule); margin: 0 0 8px; }
-.inner-text { font-size: 16px; text-align: justify; line-height: 30px; }
+.inner-text { font-size: 13px; text-align: justify; line-height: 30px; }
 .subject-indent { display: inline-block; width: 28px; }
 .text-line-full { border-bottom: 1px dotted var(--certificate-ink); padding: 3px; font-weight: bold; text-align: left; }
-.compact-value { font-size: 14px; }
+.certificate-label, .inner-text .text-line-full { font-size: 16px; }
+.inner-text .compact-value { font-size: 14px; }
 .certificate-comment { font-size: 16px; line-height: normal; padding-bottom: 2.6px; }
-.cer-container .family-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
-.serial-column { width: 9.756%; } .name-column { width: 53.341%; } .birth-column { width: 13.68%; } .age-column { width: 17.452%; } .relation-column { width: 5.771%; }
-.family-table th { height: 28px; padding: 5px; font-size: 12px; font-weight: 600; background: var(--certificate-red); color: var(--certificate-paper); text-align: left; border-bottom: 2px solid var(--certificate-desk); }
+.cer-container .family-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: auto; border-radius: 10px; }
+.serial-column { width: 10%; } .name-column { width: 55%; } .birth-column { width: 14%; } .age-column { width: 18%; } .relation-column { width: 15%; }
+.family-table th { height: 28px; padding: 5px; font-size: 12px; font-weight: 600; background: var(--certificate-red); color: var(--certificate-paper); text-align: left; white-space: nowrap; border-bottom: 2px solid var(--certificate-desk); }
 .family-table td { height: 30px; padding: 5px; border-bottom: 2px solid var(--certificate-desk); text-align: left; }
-.family-table td:last-child { overflow-wrap: normal; }
+.family-table td { white-space: nowrap; }
 .family-table th:first-child, .family-table td:first-child, .family-table th:nth-child(4), .family-table td:nth-child(4) { text-align: center; }
 .family-table td:nth-child(3) { font-size: 14px; text-align: center; white-space: nowrap; }
 .certificate-summary { margin: 0; min-height: 58px; font-size: 16px; text-align: justify; text-indent: 32px; line-height: normal; }
 .certificate-signature { width: 31.67%; margin: 38px 2.5% 0 auto; padding: 5px; font-size: 16px; line-height: normal; text-align: center; white-space: nowrap; }
-@media screen and (max-width: 720px) {
-  .certificate-actions { right: 8px; width: 100px; top: 20px; margin: 0; }
-  .certificate-actions .print-action { line-height: 18px; }
-  .cer-container { margin-left: 1.1rem; margin-right: 1.1rem; }
-}
 .certificate-status { padding: 40px; text-align: center; }
 .dashboard-page { min-height: 100vh; background: var(--background); color: var(--foreground); padding: 32px; font-family: "SolaimanLipi", sans-serif; max-width: 1100px; margin: auto; }
 .dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 24px; }
@@ -250,12 +249,12 @@
 .verified-badge { background: oklch(0.55 0.15 150); color: var(--primary-foreground); }
 @media print {
   html, body { margin: 0; padding: 0; background: var(--certificate-paper); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .certificate-page { min-height: 0; background: var(--certificate-paper); padding: 0; zoom: 90%; }
+  .certificate-page { min-height: 0; background: var(--certificate-paper); padding: 0; zoom: 1; }
   .certificate-actions, .no-print { display: none !important; }
   .app-shell, .preview-box { background: var(--certificate-paper); padding: 0; }
   .app-layout { display: block; }
   .cer-container.cer-long { break-inside: auto; page-break-inside: auto; }
   .family-table tr { break-inside: avoid; }
   .certificate-scroll { overflow: visible; padding: 0; }
-  .cer-container { margin: 0 auto; border-image-outset: 0; break-inside: avoid; page-break-inside: avoid; }
+  .cer-container { margin: 1.1rem auto; padding: 14px; border-image-outset: 1.2; break-inside: avoid; page-break-inside: avoid; zoom: 90%; }
 }

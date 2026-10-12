@@ -4,10 +4,12 @@ import { afterEach, expect, it, vi } from "vitest";
 import type { FamilyForm } from "@/lib/family";
 
 const state = vi.hoisted(() => ({
+  navigate: vi.fn(),
   publicId: "AAAAAAAAAAAA",
   data: null as { publicId: string; certificateNo: string; form: FamilyForm } | null,
 }));
 vi.mock("@tanstack/react-router", () => ({
+  useNavigate: () => state.navigate,
   Link: ({ to, className, children }: { to: string; className?: string; children: ReactNode }) => (
     <a href={to} className={className}>
       {children}
@@ -65,6 +67,27 @@ function setCertificate(publicId: string) {
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  state.navigate.mockReset();
+});
+
+it("exits the certificate through browser history when Dashboard is pressed", () => {
+  setCertificate("AAAAAAAAAAAA");
+  vi.spyOn(window.history, "length", "get").mockReturnValue(2);
+  const back = vi.spyOn(window.history, "back").mockImplementation(() => {});
+  render(<Page />);
+  fireEvent.click(screen.getByRole("button", { name: "ড্যাশবোর্ড" }));
+  expect(back).toHaveBeenCalledOnce();
+  expect(state.navigate).not.toHaveBeenCalled();
+});
+
+it("exits to the app entry page when a public link has no previous history", () => {
+  setCertificate("AAAAAAAAAAAA");
+  vi.spyOn(window.history, "length", "get").mockReturnValue(1);
+  const back = vi.spyOn(window.history, "back").mockImplementation(() => {});
+  render(<Page />);
+  fireEvent.click(screen.getByRole("button", { name: "ড্যাশবোর্ড" }));
+  expect(state.navigate).toHaveBeenCalledWith({ to: "/", replace: true });
+  expect(back).not.toHaveBeenCalled();
 });
 
 it("uses the same certificate layout and print controls as the success page", () => {

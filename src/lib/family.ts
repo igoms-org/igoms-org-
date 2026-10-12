@@ -125,7 +125,7 @@ export function toDocument(f: FamilyForm, certificateNo: string): Certificate {
     house: f.house || "-",
     comment: f.remarks || "-",
     signer: f.signer || "-",
-    designation: "চেয়ারম্যান",
+    designation: "",
     wardMember: f.ward ? f.ward.padStart(2, "0") : "",
     members: f.members.map((m) => ({
       name: `${m.name || "-"} (${m.reg || "-"})`,
