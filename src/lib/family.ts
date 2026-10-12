@@ -1,6 +1,8 @@
 import { z } from "zod";
 import type { Certificate } from "./certificate";
 
+export const DEFAULT_SIGNER_DESIGNATION = "প্যানেল চেয়ারম্যান -১";
+
 export const RELATIONS = [
   "নিজ",
   "পুত্র",
@@ -55,6 +57,12 @@ export const familyFormSchema = z
     district: req,
     ward: normalizedText.pipe(z.string().max(20, "সর্বোচ্চ ২০ অক্ষর লিখুন")),
     signer: req,
+    designation: z
+      .string()
+      .trim()
+      .min(1, "পদবি লিখুন")
+      .max(100, "সর্বোচ্চ ১০০ অক্ষর লিখুন")
+      .optional(),
     members: z
       .array(memberInputSchema)
       .min(1, "অন্তত একজন সদস্য দিন")
@@ -125,7 +133,7 @@ export function toDocument(f: FamilyForm, certificateNo: string): Certificate {
     house: f.house || "-",
     comment: f.remarks || "-",
     signer: f.signer || "-",
-    designation: "",
+    designation: f.designation ?? DEFAULT_SIGNER_DESIGNATION,
     wardMember: f.ward ? f.ward.padStart(2, "0") : "",
     members: f.members.map((m) => ({
       name: `${m.name || "-"} (${m.reg || "-"})`,

@@ -58,6 +58,82 @@ function submitForm() {
   fireEvent.click(screen.getByRole("button", { name: "জমা দিন" }));
 }
 
+it("saves panel chairman 1 when the designation is left unchanged", async () => {
+  render(<Page />);
+  fillForm();
+  expect(screen.getByRole("combobox", { name: "পদবি *" })).toHaveValue("প্যানেল চেয়ারম্যান -১");
+  submitForm();
+  fireEvent.click(screen.getByRole("button", { name: "হ্যাঁ, জমা দিন" }));
+  await waitFor(() =>
+    expect(mocks.submit).toHaveBeenCalledWith({
+      data: expect.objectContaining({ designation: "প্যানেল চেয়ারম্যান -১" }),
+    }),
+  );
+});
+
+it("saves a manually typed designation when the checkbox is enabled", async () => {
+  render(<Page />);
+  fillForm();
+  fireEvent.click(screen.getByRole("checkbox", { name: "পদবি নিজে লিখুন" }));
+  expect(screen.getByRole("textbox", { name: "পদবি *" })).toBeInTheDocument();
+  enter("designation", "ভারপ্রাপ্ত চেয়ারম্যান");
+  submitForm();
+  fireEvent.click(screen.getByRole("button", { name: "হ্যাঁ, জমা দিন" }));
+  await waitFor(() =>
+    expect(mocks.submit).toHaveBeenCalledWith({
+      data: expect.objectContaining({ designation: "ভারপ্রাপ্ত চেয়ারম্যান" }),
+    }),
+  );
+});
+
+it("retains the dropdown choice and manual draft when switching modes", () => {
+  render(<Page />);
+  enter("designation", "প্যানেল চেয়ারম্যান -২");
+  const toggle = screen.getByRole("checkbox", { name: "পদবি নিজে লিখুন" });
+  fireEvent.click(toggle);
+  expect(input("designation").value).toBe("প্যানেল চেয়ারম্যান -২");
+  enter("designation", "ভারপ্রাপ্ত চেয়ারম্যান");
+  fireEvent.click(toggle);
+  expect(screen.getByRole("combobox", { name: "পদবি *" })).toHaveValue("প্যানেল চেয়ারম্যান -২");
+  fireEvent.click(toggle);
+  expect(screen.getByRole("textbox", { name: "পদবি *" })).toHaveValue("ভারপ্রাপ্ত চেয়ারম্যান");
+});
+
+it("still requires a designation in manual mode", () => {
+  render(<Page />);
+  fillForm();
+  fireEvent.click(screen.getByRole("checkbox", { name: "পদবি নিজে লিখুন" }));
+  enter("designation", " ");
+  submitForm();
+  expect(input("designation")).toHaveAccessibleDescription("পদবি লিখুন");
+  expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+  expect(mocks.submit).not.toHaveBeenCalled();
+});
+
+it.each([
+  "চেয়ারম্যান",
+  "প্যানেল চেয়ারম্যান -১",
+  "প্যানেল চেয়ারম্যান -২",
+  "প্যানেল চেয়ারম্যান -৩",
+])(
+  "saves the selected designation %s through the existing certificate submission",
+  async (designation) => {
+    render(<Page />);
+    fillForm();
+    expect(input("designation").value).toBe("প্যানেল চেয়ারম্যান -১");
+    expect(screen.getByRole("combobox", { name: "পদবি *" }).tagName).toBe("SELECT");
+    enter("designation", designation);
+    expect(screen.getByRole("option", { name: designation })).toHaveProperty("selected", true);
+    submitForm();
+    fireEvent.click(screen.getByRole("button", { name: "হ্যাঁ, জমা দিন" }));
+    await waitFor(() =>
+      expect(mocks.submit).toHaveBeenCalledWith({
+        data: expect.objectContaining({ designation }),
+      }),
+    );
+  },
+);
+
 it.each([
   ["মোঃ আক্তার মৃধা", "০৪"],
   ["Mary-Jane O'Connor", "04"],

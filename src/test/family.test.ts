@@ -32,6 +32,24 @@ const form: FamilyForm = {
 
 describe("Family certificate rules", () => {
   afterEach(() => vi.useRealTimers());
+  it("defaults previously saved forms without a designation to panel chairman 1", () => {
+    expect(toDocument(familyFormSchema.parse(form), "00000001").designation).toBe(
+      "প্যানেল চেয়ারম্যান -১",
+    );
+  });
+  it("preserves an explicitly saved chairman designation", () => {
+    expect(
+      toDocument(familyFormSchema.parse({ ...form, designation: "চেয়ারম্যান" }), "00000001")
+        .designation,
+    ).toBe("চেয়ারম্যান");
+  });
+  it("preserves a selected panel chairman designation in the printed document", () => {
+    const saved = familyFormSchema.parse({ ...form, designation: " প্যানেল চেয়ারম্যান -১ " });
+    expect(toDocument(saved, "00000001").designation).toBe("প্যানেল চেয়ারম্যান -১");
+  });
+  it("rejects a blank designation when the user supplies the field", () => {
+    expect(familyFormSchema.safeParse({ ...form, designation: " " }).success).toBe(false);
+  });
   it("calculates age from birth date and issue date", () => {
     expect(ageOn("1978-02-01", "2026-07-25")).toBe(48);
     expect(ageOn("2004-12-11", "2026-07-25")).toBe(21);

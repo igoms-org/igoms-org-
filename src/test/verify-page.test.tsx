@@ -104,6 +104,30 @@ it("uses the same certificate layout and print controls as the success page", ()
   expect(print).toHaveBeenCalledOnce();
 });
 
+it("shows the saved designation under the signer's name on success and public verification", () => {
+  setCertificate("AAAAAAAAAAAA");
+  state.data = { ...state.data!, form: { ...form, designation: "প্যানেল চেয়ারম্যান -১" } };
+  const publicView = render(<Page />);
+  const successView = render(<SuccessPage />);
+  for (const view of [publicView, successView]) {
+    const signature = view.container.querySelector(".certificate-signature");
+    expect(signature?.querySelector("strong")).toHaveTextContent("Signer");
+    expect(signature).toHaveTextContent("প্যানেল চেয়ারম্যান -১");
+    expect(signature?.querySelector("strong")?.nextSibling?.nodeName).toBe("BR");
+  }
+});
+
+it("shows panel chairman 1 for older certificates without a saved designation", () => {
+  setCertificate("AAAAAAAAAAAA");
+  const publicView = render(<Page />);
+  const successView = render(<SuccessPage />);
+  for (const view of [publicView, successView]) {
+    expect(view.container.querySelector(".certificate-signature")).toHaveTextContent(
+      "প্যানেল চেয়ারম্যান -১",
+    );
+  }
+});
+
 it("updates the QR link when navigating between certificates", () => {
   setCertificate("AAAAAAAAAAAA");
   const view = render(<Page />);

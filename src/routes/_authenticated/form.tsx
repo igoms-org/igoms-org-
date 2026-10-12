@@ -22,6 +22,7 @@ import { CertificateDocument } from "@/components/certificate-document";
 import { submitCertificate } from "@/lib/certificates.functions";
 import {
   RELATIONS,
+  DEFAULT_SIGNER_DESIGNATION,
   canAfford,
   familyFormSchema,
   toDocument,
@@ -43,6 +44,13 @@ export const Route = createFileRoute("/_authenticated/form")({
   component: FormPage,
 });
 
+const DESIGNATIONS = [
+  "চেয়ারম্যান",
+  "প্যানেল চেয়ারম্যান -১",
+  "প্যানেল চেয়ারম্যান -২",
+  "প্যানেল চেয়ারম্যান -৩",
+] as const;
+
 const blank = (): FamilyForm => ({
   issueDate: todayIso(),
   applicantName: "",
@@ -58,6 +66,7 @@ const blank = (): FamilyForm => ({
   district: "",
   ward: "",
   signer: "",
+  designation: DEFAULT_SIGNER_DESIGNATION,
   members: [{ name: "", reg: "", dob: "", relation: "নিজ" }],
 });
 
@@ -70,6 +79,11 @@ function FormPage() {
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
   const [regUnlocked, setRegUnlocked] = useState(false);
+  const [manualDesignation, setManualDesignation] = useState(false);
+  const [selectedDesignation, setSelectedDesignation] = useState<string>(
+    DEFAULT_SIGNER_DESIGNATION,
+  );
+  const [designationDraft, setDesignationDraft] = useState<string | null>(null);
   const submit = useServerFn(submitCertificate);
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -263,7 +277,56 @@ function FormPage() {
                 {field("upazila", "উপজেলা")}
                 {field("district", "জেলা")}
                 {field("ward", "সুপারিশকারী ওয়ার্ড সদস্যের ওয়ার্ড নং", true)}
-                {field("signer", "চেয়ারম্যানের নাম")}
+                {field("signer", "স্বাক্ষরকারীর নাম")}
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <Label htmlFor="designation">পদবি *</Label>
+                    <label className="flex items-center gap-1 text-xs">
+                      <input
+                        type="checkbox"
+                        checked={manualDesignation}
+                        aria-controls="designation"
+                        onChange={(e) => {
+                          const manual = e.target.checked;
+                          setManualDesignation(manual);
+                          if (manual) set("designation", designationDraft ?? selectedDesignation);
+                          else {
+                            setDesignationDraft(f.designation ?? "");
+                            set("designation", selectedDesignation);
+                          }
+                        }}
+                      />
+                      পদবি নিজে লিখুন
+                    </label>
+                  </div>
+                  {manualDesignation ? (
+                    <Input
+                      id="designation"
+                      value={f.designation ?? ""}
+                      maxLength={100}
+                      {...errorProps("designation", "designation")}
+                      onChange={(e) => set("designation", e.target.value)}
+                    />
+                  ) : (
+                    <select
+                      id="designation"
+                      className="h-9 w-full rounded-md border border-input bg-background px-2"
+                      value={f.designation ?? DEFAULT_SIGNER_DESIGNATION}
+                      {...errorProps("designation", "designation")}
+                      onChange={(e) => {
+                        setSelectedDesignation(e.target.value);
+                        set("designation", e.target.value);
+                      }}
+                    >
+                      {DESIGNATIONS.map((designation) => (
+                        <option key={designation} value={designation}>
+                          {designation}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  {fieldError("designation", "designation")}
+                </div>
               </div>
             </section>
             <section className="space-y-3">
