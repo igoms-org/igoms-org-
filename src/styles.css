@@ -1,0 +1,261 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@font-face {
+  font-family: "SolaimanLipi";
+  src: url("/fonts/solaimanlipi.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --certificate-paper: oklch(1 0 0);
+  --certificate-ink: oklch(0 0 0);
+  --certificate-desk: oklch(0.845 0 0);
+  --certificate-red: oklch(0.428 0.176 29.234);
+  --certificate-red-deep: oklch(0.337 0.138 29.234);
+  --certificate-red-border: oklch(0.319 0.131 29.234);
+  --certificate-title-ink: oklch(0.988 0.063 107.07);
+  --certificate-rule: oklch(0.862 0.094 69.64);
+  --certificate-border-yellow: oklch(0.969 0.205 109.35);
+  --certificate-border-blue: oklch(0.567 0.239 278.12);
+  --certificate-button: oklch(0.97 0 0);
+  --certificate-button-end: oklch(0.958 0 0);
+  --certificate-button-ink: oklch(0.387 0 0);
+  --certificate-button-border: oklch(0.895 0 0);
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+  --primary: oklch(0.428 0.176 29.234);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-foreground: oklch(0.554 0.046 257.417);
+  --accent: oklch(0.968 0.007 247.896);
+  --accent-foreground: oklch(0.208 0.042 265.755);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.929 0.013 255.508);
+  --input: oklch(0.929 0.013 255.508);
+  --ring: oklch(0.704 0.04 256.788);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.984 0.003 247.858);
+  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar-primary: oklch(0.208 0.042 265.755);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.968 0.007 247.896);
+  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --sidebar-border: oklch(0.929 0.013 255.508);
+  --sidebar-ring: oklch(0.704 0.04 256.788);
+}
+
+.dark {
+  --background: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.984 0.003 247.858);
+  --card: oklch(0.208 0.042 265.755);
+  --card-foreground: oklch(0.984 0.003 247.858);
+  --popover: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.929 0.013 255.508);
+  --primary-foreground: oklch(0.208 0.042 265.755);
+  --secondary: oklch(0.279 0.041 260.031);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.279 0.041 260.031);
+  --muted-foreground: oklch(0.704 0.04 256.788);
+  --accent: oklch(0.279 0.041 260.031);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.551 0.027 264.364);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.208 0.042 265.755);
+  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.279 0.041 260.031);
+  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--background);
+    font-family: "Noto Sans Bengali", "SolaimanLipi", sans-serif;
+    color: var(--color-foreground);
+  }
+}
+
+/* Faithful document styling is intentionally separate from app controls. */
+.certificate-page { min-height: 100vh; background: var(--certificate-desk); font-family: "SolaimanLipi", "Noto Sans Bengali", sans-serif; color: var(--certificate-ink); padding: 0 0 32px; letter-spacing: 0; line-height: normal; zoom: 95%; }
+.cer-container table { font-size: 16px; }
+.certificate-actions { position: fixed; z-index: 2; right: 0; top: 50%; width: 128px; margin-top: -40px; display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+.certificate-actions button, .certificate-actions a { background: linear-gradient(var(--certificate-button), var(--certificate-button-end)); color: var(--certificate-button-ink); border: 1px solid var(--certificate-button-border); border-radius: 2px; height: 27px; padding: 0 8px; font-weight: 500; box-shadow: none; font-family: inherit; line-height: 27px; }
+.dashboard-action { font-size: 18px; width: 100px; }
+.certificate-actions .print-action { font-size: 10px; width: 100px; white-space: normal; display: block; overflow: visible; }
+.certificate-scroll { overflow-x: auto; padding: 0 28px 28px; }
+.cer-container { position: relative; box-sizing: content-box; width: 630px; height: 988px; padding: 5px; margin: 1.1rem auto; background: var(--certificate-paper); border: 1.4rem solid; border-image: radial-gradient(var(--certificate-border-yellow), var(--certificate-border-blue)) 20; border-image-outset: 1.2; font-size: 15px; text-align: justify; }
+.certificate-content { position: relative; margin-top: -25px; }
+.certificate-header { width: 100%; border-collapse: separate; border-spacing: 2px; }
+.certificate-header td { height: 90px; vertical-align: middle; padding: 1px; }
+.qr-cell { width: 18.25%; }
+.qrframe { text-align: left; }
+.qrframe img { width: 100px; height: 100px; display: inline; }
+.heading-cell { width: 54.93%; text-align: center; white-space: nowrap; }
+.government-heading { font-size: 14px; }
+.head-line-1 { color: var(--certificate-red); font-size: 30px; font-weight: 700; margin-top: 10px; }
+.head-line-2 { font-size: 18px; }
+.certificate-website { font-size: 16px; }
+.portrait-cell { text-align: right; width: 26.82%; }
+.portrait-cell img { width: 90px; height: 90px; max-width: none; display: inline; }
+.certificate-meta { width: 100%; border-collapse: collapse; }
+.certificate-meta td { height: 63px; white-space: nowrap; }
+.certificate-number { width: 30%; text-align: left; font-size: 15px; }
+.certificate-number div { display: inline; margin-left: 36px; }
+.certificate-number strong { font-size: 17px; }
+.certificate-title { box-sizing: content-box; width: 240px; padding: 3px; border: 3px solid var(--certificate-red-border); border-radius: 5px; margin: 10px auto; text-align: center; font-size: 22px; font-weight: bold; color: var(--certificate-title-ink); background: linear-gradient(var(--certificate-red), var(--certificate-red-deep)); }
+.certificate-date { width: 20%; text-align: right; font-size: 18px; }
+.certificate-divider { height: 1px; border: 0; border-top: 2px dashed var(--certificate-rule); margin: 0 0 8px; }
+.inner-text { font-size: 16px; text-align: justify; line-height: 30px; }
+.subject-indent { display: inline-block; width: 28px; }
+.text-line-full { border-bottom: 1px dotted var(--certificate-ink); padding: 3px; font-weight: bold; text-align: left; }
+.compact-value { font-size: 14px; }
+.certificate-comment { font-size: 16px; line-height: normal; padding-bottom: 2.6px; }
+.cer-container .family-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+.serial-column { width: 9.756%; } .name-column { width: 53.341%; } .birth-column { width: 13.68%; } .age-column { width: 17.452%; } .relation-column { width: 5.771%; }
+.family-table th { height: 28px; padding: 5px; font-size: 12px; font-weight: 600; background: var(--certificate-red); color: var(--certificate-paper); text-align: left; border-bottom: 2px solid var(--certificate-desk); }
+.family-table td { height: 30px; padding: 5px; border-bottom: 2px solid var(--certificate-desk); text-align: left; }
+.family-table td:last-child { overflow-wrap: normal; }
+.family-table th:first-child, .family-table td:first-child, .family-table th:nth-child(4), .family-table td:nth-child(4) { text-align: center; }
+.family-table td:nth-child(3) { font-size: 14px; text-align: center; white-space: nowrap; }
+.certificate-summary { margin: 0; min-height: 58px; font-size: 16px; text-align: justify; text-indent: 32px; line-height: normal; }
+.certificate-signature { width: 31.67%; margin: 38px 2.5% 0 auto; padding: 5px; font-size: 16px; line-height: normal; text-align: center; white-space: nowrap; }
+@media screen and (max-width: 720px) {
+  .certificate-actions { right: 8px; width: 100px; top: 20px; margin: 0; }
+  .certificate-actions .print-action { line-height: 18px; }
+  .cer-container { margin-left: 1.1rem; margin-right: 1.1rem; }
+}
+.certificate-status { padding: 40px; text-align: center; }
+.dashboard-page { min-height: 100vh; background: var(--background); color: var(--foreground); padding: 32px; font-family: "SolaimanLipi", sans-serif; max-width: 1100px; margin: auto; }
+.dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 24px; }
+.dashboard-header h1 { font-size: 30px; font-weight: bold; }
+.dashboard-back { display: inline-flex; align-items: center; gap: 8px; color: var(--muted-foreground); }
+.dashboard-signin { padding: 70px 0; text-align: center; }
+.dashboard-signin h2 { font-size: 24px; margin-bottom: 20px; }
+.certificate-editor { display: flex; flex-direction: column; gap: 16px; }
+.editor-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.editor-grid label, .member-editor label { display: block; margin-bottom: 8px; }
+.editor-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 24px 0; }
+.editor-section-heading h2 { font-size: 22px; font-weight: bold; }
+.member-editor { display: grid; grid-template-columns: 3fr 2fr 1fr 1.5fr 36px; gap: 12px; align-items: end; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.editor-footer { display: flex; justify-content: flex-end; gap: 12px; padding: 24px 0; }
+.saved-records { margin-top: 24px; }
+.saved-record { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding: 18px 0; }
+.saved-record > div { flex: 1; }
+.saved-record p, .empty-records { color: var(--muted-foreground); }
+.empty-records { padding: 40px 0; }
+@media screen and (max-width: 650px) {
+  .dashboard-page { padding: 20px; }
+  .editor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .member-editor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .saved-record { flex-wrap: wrap; }
+}
+@page { size: A4 portrait; margin: 10mm; }
+.cer-container.cer-long { height: auto; min-height: 988px; }
+.app-shell { min-height: 100vh; background: var(--background); }
+.app-header { background: var(--primary); color: var(--primary-foreground); }
+.app-layout { display: grid; grid-template-columns: minmax(0, 1fr) 680px; gap: 24px; align-items: start; }
+.preview-box { background: var(--certificate-desk); border-radius: 8px; overflow-x: auto; padding: 8px 0; position: sticky; top: 16px; }
+@media screen and (max-width: 1200px) { .app-layout { grid-template-columns: 1fr; } .preview-box { position: static; } }
+.verified-badge { background: oklch(0.55 0.15 150); color: var(--primary-foreground); }
+@media print {
+  html, body { margin: 0; padding: 0; background: var(--certificate-paper); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .certificate-page { min-height: 0; background: var(--certificate-paper); padding: 0; zoom: 90%; }
+  .certificate-actions, .no-print { display: none !important; }
+  .app-shell, .preview-box { background: var(--certificate-paper); padding: 0; }
+  .app-layout { display: block; }
+  .cer-container.cer-long { break-inside: auto; page-break-inside: auto; }
+  .family-table tr { break-inside: avoid; }
+  .certificate-scroll { overflow: visible; padding: 0; }
+  .cer-container { margin: 0 auto; border-image-outset: 0; break-inside: avoid; page-break-inside: avoid; }
+}

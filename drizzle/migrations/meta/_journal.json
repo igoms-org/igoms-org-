@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791734654282,
+      "tag": "0000_create_certificates",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791758650419,
+      "tag": "0001_tokens_roles_certificates",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791765160750,
+      "tag": "0002_admin_set_next_certificate_no",
+      "breakpoints": true
+    }
+  ]
+}
