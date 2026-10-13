@@ -79,7 +79,7 @@ it("shows the saved QR ID separately from the certificate number while keeping t
     expect(view.container.querySelector(".certificate-number")).toHaveTextContent("00000023");
     expect(within(view.container).getByTestId("qr")).toHaveTextContent(`${window.location.origin}/verify/AAAAAAAAAAAA`);
   }
-  expect(publicView.container.innerHTML).toBe(successView.container.innerHTML);
+  expect(publicView.container.querySelector(".certificate-page")!.outerHTML).toBe(successView.container.innerHTML);
   expect(preview.container.innerHTML).toBe(publicView.container.querySelector(".cer-container")!.outerHTML);
 });
 
@@ -96,7 +96,7 @@ it("changes only the title text across preview, saved, and printed certificates"
   normalized.querySelector("h1")!.textContent = "পারিবারিক সনদ";
   expect(normalized.outerHTML).toBe(originalDocument);
   const successView = render(<SuccessPage />);
-  expect(successView.container.innerHTML).toBe(publicView.container.innerHTML);
+  expect(successView.container.innerHTML).toBe(publicView.container.querySelector(".certificate-page")!.outerHTML);
   const preview = render(<CertificateDocument data={toDocument(saved, "00000001")}
     verificationUrl={`${window.location.origin}/verify/AAAAAAAAAAAA`} />);
   expect(preview.container.innerHTML).toBe(warishDocument.outerHTML);
@@ -112,7 +112,51 @@ it("changes only the title text across preview, saved, and printed certificates"
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
   state.navigate.mockReset();
+});
+
+it.each([282, 284, 320, 375, 768])("fits the complete page at %spx without changing the certificate", (width) => {
+  setCertificate("AAAAAAAAAAAA");
+  const originalStyles = window.getComputedStyle.bind(window);
+  vi.spyOn(window, "getComputedStyle").mockImplementation((element) => {
+    if (element.matches(".cer-container")) return {
+      width: "630px", paddingLeft: "5px", paddingRight: "5px",
+      borderLeftWidth: "22.4px", borderRightWidth: "22.4px", borderImageOutset: "1.2",
+    } as CSSStyleDeclaration;
+    if (element.matches(".certificate-scroll")) return {
+      paddingLeft: "28px", paddingRight: "28px",
+    } as CSSStyleDeclaration;
+    return originalStyles(element);
+  });
+  let viewportWidth = width;
+  vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockImplementation(function (this: HTMLElement) {
+    return this.matches(".verification-viewport") ? viewportWidth : 0;
+  });
+  const disconnect = vi.fn();
+  vi.stubGlobal("ResizeObserver", class {
+    observe = vi.fn();
+    disconnect = disconnect;
+  });
+  const view = render(<Page />);
+  const frame = view.container.querySelector<HTMLElement>(".verification-viewport")!;
+  const certificate = view.container.querySelector(".cer-container")!;
+  const unchanged = certificate.outerHTML;
+  const pageWidth = () => parseFloat(frame.style.getPropertyValue("--certificate-mobile-width"));
+  const zoom = () => Number(frame.style.getPropertyValue("--certificate-mobile-zoom"));
+  expect(pageWidth()).toBeCloseTo(740.8);
+  expect(pageWidth() * zoom()).toBeLessThanOrEqual(width + 0.001);
+  expect((630 + 10 + 44.8 * 2.2) * zoom()).toBeLessThanOrEqual(width + 0.001);
+  viewportWidth = 282;
+  fireEvent(window, new Event("resize"));
+  expect(pageWidth() * zoom()).toBeCloseTo(282);
+  expect(certificate.outerHTML).toBe(unchanged);
+  const print = vi.spyOn(window, "print").mockImplementation(() => {});
+  fireEvent.click(within(view.container).getByRole("button", { name: /প্রিন্ট করুন A4/ }));
+  expect(print).toHaveBeenCalledOnce();
+  expect(certificate.outerHTML).toBe(unchanged);
+  view.unmount();
+  expect(disconnect).toHaveBeenCalledOnce();
 });
 
 it("exits the certificate through browser history when Dashboard is pressed", () => {
@@ -139,7 +183,7 @@ it("uses the same certificate layout and print controls as the success page", ()
   setCertificate("AAAAAAAAAAAA");
   const publicView = render(<Page />);
   const successView = render(<SuccessPage />);
-  expect(publicView.container.innerHTML).toBe(successView.container.innerHTML);
+  expect(publicView.container.querySelector(".certificate-page")!.outerHTML).toBe(successView.container.innerHTML);
   expect(
     publicView.container.querySelector(".certificate-page .certificate-scroll .cer-container"),
   ).toBeInTheDocument();

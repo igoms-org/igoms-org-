@@ -240,6 +240,10 @@
   .saved-record { flex-wrap: wrap; }
 }
 @page { size: A4 portrait; margin: 10mm; }
+@media screen and (max-width: 960px) {
+  .verification-viewport { min-height: 100vh; background: var(--certificate-desk); }
+  .verification-viewport .certificate-page { width: var(--certificate-mobile-width, auto); margin: 0 auto; zoom: var(--certificate-mobile-zoom, 95%); }
+}
 .cer-container.cer-long { height: auto; min-height: 988px; }
 .app-shell { min-height: 100vh; background: var(--background); }
 .app-header { background: var(--primary); color: var(--primary-foreground); }
