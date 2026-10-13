@@ -58,6 +58,35 @@ function submitForm() {
   fireEvent.click(screen.getByRole("button", { name: "জমা দিন" }));
 }
 
+it("selects the title outside the unchanged form and saves it without altering input data", async () => {
+  render(<Page />);
+  fillForm();
+  const selector = screen.getByRole("combobox", { name: "সনদের ধরন" });
+  expect(selector.closest("form")).toBeNull();
+  expect(selector.closest(".no-print")).not.toBeNull();
+  expect(selector).toHaveValue("family");
+  const originalForm = document.querySelector("form")!.innerHTML;
+  fireEvent.change(selector, { target: { value: "warish" } });
+  expect(document.querySelector("form")!.innerHTML).toBe(originalForm);
+  submitForm();
+  fireEvent.click(screen.getByRole("button", { name: "হ্যাঁ, জমা দিন" }));
+  await waitFor(() => expect(mocks.submit).toHaveBeenCalledWith({
+    data: expect.objectContaining({ certificateType: "warish", applicantName: "মোঃ আক্তার মৃধা",
+      members: [expect.objectContaining({ name: "মোঃ আক্তার মৃধা", dob: "2000-02-29", relation: "নিজ" })] }),
+  }));
+});
+
+it("allows switching back to the family title without changing form data", () => {
+  render(<Page />);
+  fillForm();
+  const originalForm = document.querySelector("form")!.innerHTML;
+  const selector = screen.getByRole("combobox", { name: "সনদের ধরন" });
+  fireEvent.change(selector, { target: { value: "warish" } });
+  fireEvent.change(selector, { target: { value: "family" } });
+  expect(selector).toHaveValue("family");
+  expect(document.querySelector("form")!.innerHTML).toBe(originalForm);
+});
+
 it("saves panel chairman 1 when the designation is left unchanged", async () => {
   render(<Page />);
   fillForm();

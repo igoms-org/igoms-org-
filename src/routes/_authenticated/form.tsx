@@ -449,6 +449,17 @@ function FormPage() {
             </Button>
           </form>
           <div className="preview-box">
+            <label className="no-print mx-4 flex items-center gap-2 text-sm">
+              সনদের ধরন
+              <select
+                className="h-9 rounded-md border border-input bg-background px-2"
+                value={f.certificateType ?? "family"}
+                onChange={(e) => set("certificateType", e.target.value as FamilyForm["certificateType"])}
+              >
+                <option value="family">পারিবারিক সনদ</option>
+                <option value="warish">ওয়ারিশ সনদ</option>
+              </select>
+            </label>
             <CertificateDocument
               data={toDocument(
                 parsedForm.success ? parsedForm.data : f,

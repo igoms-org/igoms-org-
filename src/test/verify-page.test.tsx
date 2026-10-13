@@ -40,6 +40,8 @@ vi.mock("qrcode.react", () => ({
 
 import { Route } from "@/routes/verify.$publicId";
 import { Route as SuccessRoute } from "@/routes/_authenticated/success.$publicId";
+import { CertificateDocument } from "@/components/certificate-document";
+import { familyFormSchema, toDocument } from "@/lib/family";
 const Page = Route.options.component as React.ComponentType;
 const SuccessPage = SuccessRoute.options.component as React.ComponentType;
 const form: FamilyForm = {
@@ -64,6 +66,33 @@ function setCertificate(publicId: string) {
   state.data = { publicId, certificateNo: "00000001", form };
   window.history.replaceState(null, "", `/verify/${publicId}?tracking=test`);
 }
+
+it("changes only the title text across preview, saved, and printed certificates", () => {
+  setCertificate("AAAAAAAAAAAA");
+  const publicView = render(<Page />);
+  const originalDocument = publicView.container.querySelector(".cer-container")!.outerHTML;
+  const saved = familyFormSchema.parse({ ...form, certificateType: "warish" });
+  state.data = { ...state.data!, form: saved };
+  publicView.rerender(<Page />);
+  const warishDocument = publicView.container.querySelector(".cer-container")!;
+  expect(warishDocument.querySelector("h1")).toHaveTextContent("ওয়ারিশ সনদ");
+  const normalized = warishDocument.cloneNode(true) as HTMLElement;
+  normalized.querySelector("h1")!.textContent = "পারিবারিক সনদ";
+  expect(normalized.outerHTML).toBe(originalDocument);
+  const successView = render(<SuccessPage />);
+  expect(successView.container.innerHTML).toBe(publicView.container.innerHTML);
+  const preview = render(<CertificateDocument data={toDocument(saved, "00000001")}
+    verificationUrl={`${window.location.origin}/verify/AAAAAAAAAAAA`} />);
+  expect(preview.container.innerHTML).toBe(warishDocument.outerHTML);
+  const print = vi.spyOn(window, "print").mockImplementation(() => {
+    expect(warishDocument.querySelector("h1")).toHaveTextContent("ওয়ারিশ সনদ");
+  });
+  fireEvent.click(within(publicView.container).getByRole("button", { name: /প্রিন্ট করুন A4/ }));
+  expect(print).toHaveBeenCalledOnce();
+  state.data = { ...state.data!, form: familyFormSchema.parse({ ...form, certificateType: "family" }) };
+  publicView.rerender(<Page />);
+  expect(publicView.container.querySelector(".cer-container")!.outerHTML).toBe(originalDocument);
+});
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();

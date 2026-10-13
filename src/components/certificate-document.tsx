@@ -51,7 +51,7 @@ export function CertificateDocument({
                 </div>
               </td>
               <td className="certificate-title-cell">
-                <h1 className="certificate-title">পারিবারিক সনদ</h1>
+                <h1 className="certificate-title">{data.certificateType === "warish" ? "ওয়ারিশ সনদ" : "পারিবারিক সনদ"}</h1>
               </td>
               <td className="certificate-date">
                 তারিখ: <strong>{data.date}</strong>

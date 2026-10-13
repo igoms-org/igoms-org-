@@ -4,6 +4,7 @@ const text = z.string().trim().min(1).max(200);
 const optionalText = z.string().trim().max(150);
 export const memberSchema = z.object({ name: text, birthDate: z.string().regex(/^\d{2}-\d{2}-\d{4}$/), age: z.coerce.number().int().min(0).max(150), relation: text });
 export const certificateSchema = z.object({
+  certificateType: z.enum(["family", "warish"]).optional(),
   referenceId: z.string().regex(/^\d{1,12}$/), number: text,
   date: z.string().regex(/^\d{2}-\d{2}-\d{4}$/), union: text, upazila: text, district: text,
   subject: text, nationalId: optionalText, father: text, mother: text, village: text, ward: text, house: text,

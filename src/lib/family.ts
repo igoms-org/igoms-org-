@@ -41,6 +41,7 @@ export const memberInputSchema = z.object({
 });
 export const familyFormSchema = z
   .object({
+    certificateType: z.enum(["family", "warish"]).optional(),
     issueDate: isoDate,
     applicantName: req,
     applicantReg: opt,
@@ -118,6 +119,7 @@ export const todayIso = () => {
 /** Maps saved form data onto the printable certificate document. */
 export function toDocument(f: FamilyForm, certificateNo: string): Certificate {
   return {
+    certificateType: f.certificateType ?? "family",
     referenceId: certificateNo.replace(/\D/g, "").slice(-12) || "0",
     number: certificateNo,
     date: toDisplayDate(f.issueDate),
