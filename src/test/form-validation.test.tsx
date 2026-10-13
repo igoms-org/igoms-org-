@@ -17,6 +17,7 @@ vi.mock("@/components/app-header", () => ({
     data: {
       cost: 1,
       nextNo: "00000001",
+      nextQrId: 2156,
       profile: {
         token_balance: 10,
         union_name_and_no: "Union",

@@ -31,6 +31,16 @@ const form: FamilyForm = {
 };
 
 describe("Family certificate rules", () => {
+  it("uses the independent saved QR ID without changing any other document data", () => {
+    const original = toDocument(form, "00000023");
+    const saved = familyFormSchema.parse({ ...form, qrId: 2156 });
+    expect(toDocument(saved, "00000023")).toEqual({ ...original, referenceId: "2156" });
+    expect(toDocument(saved, "00000023", 9999).referenceId).toBe("2156");
+  });
+  it("previews the next QR ID independently of the certificate number", () => {
+    expect(toDocument(form, "00000023", 2157)).toMatchObject({ referenceId: "2157", number: "00000023" });
+    expect(toDocument(form, "00000023").referenceId).toBe("00000023");
+  });
   afterEach(() => vi.useRealTimers());
   it("defaults previously saved forms without a designation to panel chairman 1", () => {
     expect(toDocument(familyFormSchema.parse(form), "00000001").designation).toBe(

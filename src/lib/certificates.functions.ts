@@ -31,14 +31,15 @@ export const verifyCertificate = createServerFn({ method: "GET" })
 
 export const getMe = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
   const sb = context.supabase;
-  const [profile, admin, cost, next] = await Promise.all([
+  const [profile, admin, cost, next, nextQr] = await Promise.all([
     sb.from("profiles").select("*").eq("user_id", context.userId).maybeSingle(),
     sb.rpc("is_admin"),
     sb.from("settings").select("value").eq("key", "cost_per_certificate").maybeSingle(),
     sb.rpc("next_certificate_no"),
+    sb.rpc("next_qr_id"),
   ]);
   if (profile.error) throw new Error("Could not load profile");
-  return { profile: profile.data, email: (context.claims as { email?: string }).email ?? "", isAdmin: admin.data === true, cost: cost.data?.value ?? 1, nextNo: next.data ?? "00000001" };
+  return { profile: profile.data, email: (context.claims as { email?: string }).email ?? "", isAdmin: admin.data === true, cost: cost.data?.value ?? 1, nextNo: next.data ?? "00000001", nextQrId: nextQr.data ?? 2156 };
 });
 
 export const submitCertificate = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])

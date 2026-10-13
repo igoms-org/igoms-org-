@@ -191,6 +191,7 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       next_certificate_no: { Args: never; Returns: string }
+      next_qr_id: { Args: never; Returns: number }
       submit_certificate: { Args: { p_data: Json }; Returns: string }
     }
     Enums: {

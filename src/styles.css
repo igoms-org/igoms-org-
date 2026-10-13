@@ -180,7 +180,7 @@
 .certificate-header { width: 100%; border-collapse: separate; border-spacing: 2px; }
 .certificate-header td { height: 90px; vertical-align: middle; padding: 1px; }
 .qr-cell { width: 20%; }
-.qrframe { text-align: left; }
+.qrframe { text-align: left; position: relative; left: 12px; top: 10px; }
 .qrframe svg { width: 100px; height: 100px; max-width: none; display: inline; vertical-align: baseline; }
 .heading-cell { width: 60%; text-align: center; white-space: nowrap; }
 .government-heading { font-size: 14px; }

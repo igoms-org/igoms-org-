@@ -30,6 +30,10 @@ Run the checks with `npm test`, `npm run lint`, and `npm run build`.
 
 For an existing database, apply `drizzle/migrations/0003_validate_certificate_data.sql` in the Supabase SQL Editor to enable certificate validation for direct RPC calls. This migration rejects malformed data before charging tokens. Public verification remains available without login through each certificate's verification link or QR code.
 
+Apply `drizzle/migrations/0004_independent_qr_ids.sql` next to assign new certificates separate QR display IDs starting at 2156. IDs are allocated by the protected submission RPC and stored with each certificate; older certificates keep their existing displayed ID. The QR code continues to link to the certificate's unguessable public verification URL.
+
+To also assign QR IDs to older certificates, apply `drizzle/migrations/0005_backfill_legacy_qr_ids.sql` and invoke `admin_backfill_qr_ids()` from an authenticated administrator session. This fills only missing QR IDs, in creation order, and advances the same counter used by new submissions. Certificate numbers, verification links, and all other certificate information remain unchanged. Calling it again does not renumber certificates.
+
 ## Vercel deployment
 
 1. Import this project into Vercel and leave the build command as `npm run build`.

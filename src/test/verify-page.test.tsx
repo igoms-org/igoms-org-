@@ -67,6 +67,22 @@ function setCertificate(publicId: string) {
   window.history.replaceState(null, "", `/verify/${publicId}?tracking=test`);
 }
 
+it("shows the saved QR ID separately from the certificate number while keeping the scan URL", () => {
+  setCertificate("AAAAAAAAAAAA");
+  state.data = { ...state.data!, certificateNo: "00000023", form: { ...form, qrId: 2156 } };
+  const publicView = render(<Page />);
+  const successView = render(<SuccessPage />);
+  const preview = render(<CertificateDocument data={toDocument({ ...form, qrId: 2156 }, "00000023")}
+    verificationUrl={`${window.location.origin}/verify/AAAAAAAAAAAA`} />);
+  for (const view of [publicView, successView, preview]) {
+    expect(view.container.querySelector(".qrframe")).toHaveTextContent("2156");
+    expect(view.container.querySelector(".certificate-number")).toHaveTextContent("00000023");
+    expect(within(view.container).getByTestId("qr")).toHaveTextContent(`${window.location.origin}/verify/AAAAAAAAAAAA`);
+  }
+  expect(publicView.container.innerHTML).toBe(successView.container.innerHTML);
+  expect(preview.container.innerHTML).toBe(publicView.container.querySelector(".cer-container")!.outerHTML);
+});
+
 it("changes only the title text across preview, saved, and printed certificates", () => {
   setCertificate("AAAAAAAAAAAA");
   const publicView = render(<Page />);
